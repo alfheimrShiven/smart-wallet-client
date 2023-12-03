@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es2018", // Specifies the version of ECMAScript your code should target
+    "module": "esnext", // Specifies the module system for generated code
+    "strict": true, // Enables strict type-checking options
+    "esModuleInterop": true, // Allows compatibility with modules using default exports
+    "outDir": "./dist", // Specifies an output directory for compiled files
+    "sourceMap": true // Generates corresponding .map files for easier debugging
+  },
+  "include": ["src/**/*.ts"], // Specifies the files to be included in compilation
+  "exclude": ["node_modules"] // Specifies files/folders to be excluded from compilation
+}

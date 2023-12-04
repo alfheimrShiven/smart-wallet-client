@@ -4,8 +4,14 @@
     "module": "esnext", // Specifies the module system for generated code
     "strict": true, // Enables strict type-checking options
     "esModuleInterop": true, // Allows compatibility with modules using default exports
+    "resolveJsonModule": true,
     "outDir": "./dist", // Specifies an output directory for compiled files
-    "sourceMap": true // Generates corresponding .map files for easier debugging
+    "sourceMap": true, // Generates corresponding .map files for easier debugging
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {
+      "*": ["node_modules/*"]
+    }
   },
   "include": ["src/**/*.ts"], // Specifies the files to be included in compilation
   "exclude": ["node_modules"] // Specifies files/folders to be excluded from compilation

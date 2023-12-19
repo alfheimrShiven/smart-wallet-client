@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "ethers": "^6.9.0",
-    "shamir-secret-sharing": "^0.0.3"
+    "shamir-secret-sharing": "^0.0.3",
+    "web3": "^4.3.0"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.23.3",

@@ -1,9 +1,20 @@
 import { ethers, HDNodeWallet, Wallet } from "ethers";
+import AccountRecoveryContractABI from "./account-recovery-abi.json";
 import * as shamir from 'shamir-secret-sharing';
+var Contract = require('web3-eth-contract');
 
 let walletAddress: string;
 let walletPrivateKey: string;
 let walletPublicKey: string;
+// share with AccountRecovery.sol contract
+const CONTRACT_ADDRESS: string = "0x2ACDe8bc8567D49CF2Fe54999d4d4A1cd1a9fFEA";
+const RPC_URL: string = "http://localhost:8545";
+
+function getContract(): any {
+    Contract.setProvider(RPC_URL);
+    var contract: any = new Contract(AccountRecoveryContractABI, CONTRACT_ADDRESS);
+    return contract;
+}
 
 function createWallet() {
     let newWallet: HDNodeWallet = ethers.Wallet.createRandom();
@@ -16,13 +27,12 @@ function createWallet() {
 }
 
 async function splitPrivateKeyIntoShards() {
-    const [share1, share2, share3] = await shamir.split(toUint8Array(walletPrivateKey), 3, 2);
-    console.log("Share 1:", share1);
-    console.log("Share 2:", share2);
-    console.log("Share 3:", share3);
+    const privateKey: any = toUint8Array(walletPrivateKey);
+    const [share1, share2, share3] = await shamir.split(privateKey, 3, 2);
 
-    const reconstructed = await shamir.combine([share1, share3]);
-    console.log("Do the shares reconstruct the privateKey back:", (reconstructed) === (toUint8Array(walletPrivateKey))); // true
+    const privateKeyShardsArray: Uint8Array[] = [share1, share2, share3];
+    const AccountRecoveryContract = getContract();
+    AccountRecoveryContract.methods.storePrivateKeyShards(privateKeyShardsArray).send();
 }
 
 const toUint8Array = (data: string) => new TextEncoder().encode(data);
@@ -40,4 +50,3 @@ document.addEventListener('DOMContentLoaded', () => {
         shardButton.addEventListener('click', splitPrivateKeyIntoShards);
     }
 });
-

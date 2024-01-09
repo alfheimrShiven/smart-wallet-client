@@ -1,19 +1,27 @@
 {
   "compilerOptions": {
-    "target": "es2018", // Specifies the version of ECMAScript your code should target
-    "module": "esnext", // Specifies the module system for generated code
-    "strict": true, // Enables strict type-checking options
-    "esModuleInterop": true, // Allows compatibility with modules using default exports
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "outDir": "./dist", // Specifies an output directory for compiled files
-    "sourceMap": true, // Generates corresponding .map files for easier debugging
-    "moduleResolution": "node",
-    "baseUrl": "./",
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
-      "*": ["node_modules/*"]
-    },
-    "allowJs": true
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src/**/*.ts"], // Specifies the files to be included in compilation
-  "exclude": ["node_modules"] // Specifies files/folders to be excluded from compilation
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

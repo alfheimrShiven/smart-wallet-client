@@ -1,7 +1,7 @@
 "use client";
 
-export { ThirdwebProvider, embeddedWallet, ConnectWallet, useWallet, useConnectionStatus, smartWallet, useSmartWallet } from "@thirdweb-dev/react";
+export { ThirdwebProvider, embeddedWallet, ConnectWallet, useWallet, useConnectionStatus, smartWallet, useSmartWallet, useDisconnect } from "@thirdweb-dev/react";
 export { SmartWallet } from "@thirdweb-dev/wallets";
 
-export { AreonNetworkTestnet, Goerli, AreonNetwork } from "@thirdweb-dev/chains";
+export { AreonNetworkTestnet, Goerli, AreonNetwork, Mumbai } from "@thirdweb-dev/chains";
 

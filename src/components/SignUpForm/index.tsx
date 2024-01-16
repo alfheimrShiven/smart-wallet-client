@@ -1,34 +1,45 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { AreonNetworkTestnet, ConnectWallet, useConnectionStatus, useWallet, SmartWallet, useSmartWallet, embeddedWallet } from '@/providers/ThirdwebProvider';
+import { ConnectWallet, useConnectionStatus, useWallet, useSmartWallet, embeddedWallet, useDisconnect } from '@/providers/ThirdwebProvider';
 
 
 export default function index() {
     const [email, setEmail] = useState<string | undefined>(undefined)
+    const disconnect = useDisconnect()
 
     const connectionStatus = useConnectionStatus();
     const embeddedWalletObj = useWallet("embeddedWallet");
 
-    const { connect } = useSmartWallet(embeddedWallet(), {
+    const { connect, predictAddress } = useSmartWallet(embeddedWallet(), {
         factoryAddress: `${process.env.NEXT_PUBLIC_ACCOUNT_FACTORY_ADDRESS}`,
         gasless: true,
     });
 
-    const onClick = async () => {
-        await connect({
-            connectPersonalWallet: async (embeddedWallet) => {
-                // login with google and connect the embedded wallet
-                const authResult = await embeddedWallet.authenticate({
-                    strategy: 'google'
-                });
-                await embeddedWallet.connect({ authResult });
-            },
-        });
-    };
+    // const onClick = async () => {
+    //     await connect({
+    //         connectPersonalWallet: async (embeddedWallet) => {
+    //             // login with google and connect the embedded wallet
+    //             const authResult = await embeddedWallet.authenticate({
+    //                 strategy: 'google'
+    //             });
+    //             const h = await embeddedWallet.connect({ authResult });
+    //             console.log(h)
+    //         },
+    //     });
+    // };
 
 
     const getUserData = async () => {
         const email = await embeddedWalletObj?.getEmail();
+        const wallet = await embeddedWalletObj?.getAddress()
+        console.log("Predicted Normal Wallet address", wallet)
         setEmail(email)
+
+        if (wallet) {
+            const address = await predictAddress({
+                personalWalletAddress: wallet,
+            });
+            console.log("Predicted Smart Wallet address", address);
+        }
     }
 
 
@@ -38,7 +49,8 @@ export default function index() {
 
     return (
         <form className='w-[80%] max-w-[400px] h-[80%]  flex flex-col justify-between '>
-            <button type='button' onClick={onClick} className='border'>Click Test</button>
+            {/* <button type='button' onClick={onClick} className='border'>Click Test</button> */}
+            <button type='button' onClick={() => disconnect()} className='border'>Disconnect</button>
             {(connectionStatus == "connecting" || connectionStatus == "unknown") && <div className='h-[50%] flex flex-col justify-center gap-5'>
                 <h3 className='font-semibold text'>Welcome  &#128075;</h3>
                 <p>Loading...</p>

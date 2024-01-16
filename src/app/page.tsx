@@ -19,7 +19,7 @@ export default function page() {
       activeChain={AreonNetworkTestnet}
       clientId={process.env.NEXT_PUBLIC_CLIENT_ID}
       supportedWallets={[
-        // smartWallet(embeddedWallet(), config),
+        smartWallet(embeddedWallet(), config),
         embeddedWallet({
           auth: {
             options: ["email", "facebook", "apple", "google"],

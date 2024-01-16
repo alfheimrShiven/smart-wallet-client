@@ -31,13 +31,14 @@ export default function index() {
     const getUserData = async () => {
         const email = await embeddedWalletObj?.getEmail();
         const wallet = await embeddedWalletObj?.getAddress()
-        console.log("Predicted Normal Wallet address", wallet)
+
         setEmail(email)
 
         if (wallet) {
             const address = await predictAddress({
                 personalWalletAddress: wallet,
             });
+            console.log(" Normal Wallet address", wallet)
             console.log("Predicted Smart Wallet address", address);
         }
     }

@@ -1,8 +1,8 @@
-import { AccountList, AccountState } from "@/components/GuardianPortal";
+import { AccountList, AccountState } from "@components/GuardianPortal";
 
 
 
-export default function page() {
+export default function GuardianPortal() {
     return (
         <div className="h-full w-full py-3  px-3">
             <div className="h-[10%] flex justify-between  items-center">

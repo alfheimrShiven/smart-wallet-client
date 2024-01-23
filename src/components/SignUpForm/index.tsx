@@ -1,30 +1,74 @@
-import { useEffect, useState } from 'react'
-//import abi from "@abi/AccountFactory.json"
+import { useEffect } from 'react'
+import abi from "@abi/AccountFactory.json"
 import { usePrivy, useWallets } from '@privy-io/react-auth';
-//import { usePrivyWagmi } from '@privy-io/wagmi-connector';
-
+import { encodeAbiParameters, parseAbiParameters } from 'viem'
+import { getViemWalletClient, publicClient } from '@utils/viemClient';
+import { getAccount } from 'wagmi/actions';
+import { usePrivyWagmi } from '@privy-io/wagmi-connector';
+import { useNavigate } from 'react-router-dom';
+import useUserStore from '@services/states/userStore';
 
 
 
 export default function index() {
-    const [email, setEmail] = useState<string | undefined>(undefined)
-    const [wallet, setWallet] = useState<string | undefined>(undefined)
-
-    // const { wallet: activeWallet, setActiveWallet } = usePrivyWagmi();
-
+    const { wallet: activeWallet, setActiveWallet } = usePrivyWagmi();
+    const { setUser } = useUserStore()
+    const navigate = useNavigate()
     const { wallets } = useWallets();
     console.log(wallets)
-
-    const { login, ready, authenticated, user, logout } = usePrivy()
-    console.log(user)
+    const { login, authenticated, user, logout } = usePrivy()
 
 
+    const createAccount = async () => {
+        const walletClient = await getViemWalletClient(wallets)
 
-    // useEffect(() => {
-    //     setActiveWallet(wallets[0])
-    // }, [wallets])
+        const email = encodeAbiParameters(
+            parseAbiParameters('string'),
+            [user.google.email || user.discord.email || user.apple.email || user.email.address]
+        )
+
+        const { request } = await publicClient.simulateContract({
+            address: import.meta.env.VITE_ACCOUNT_FACTORY_ADDRESS,
+            abi: abi,
+            functionName: 'createAccount',
+            args: [wallets[0].address, email],
+            account: `0x${wallets[0].address.substring(2)}`
+        })
+
+        const hash = await walletClient.writeContract(request)
+        const transactionReceipt = await publicClient.waitForTransactionReceipt(
+            {
+                hash
+            }
+        )
+
+        console.log(transactionReceipt)
+        getUserWallet()
+    }
 
 
+
+    const getUserWallet = async () => {
+        const data = await publicClient.readContract({
+            address: import.meta.env.VITE_ACCOUNT_FACTORY_ADDRESS,
+            abi: abi,
+            functionName: 'getAccountsOfSigner',
+            args: [wallets[0].address]
+        })
+
+        console.log(data)
+        //@ts-ignore
+        if (data && data?.length > 0) {
+            setUser({ smartWallet: data[0] })
+            navigate('/dashboard');
+        }
+    }
+
+    useEffect(() => {
+        setActiveWallet(wallets[0])
+        //read user's wallet 
+        getUserWallet()
+    }, [wallets])
 
 
     return (
@@ -46,7 +90,7 @@ export default function index() {
                     <input className='w-full h-full outline-none focus:ring-0 focus:border-none border-none bg-transparent px-3'
                         placeholder='OTP' />
                 </div> */}
-                <button type='button' className='bg-primary_3 rounded-full px-3  py-3 font-semibold text-sm '>Create Wallet</button>
+                <button onClick={createAccount} type='button' className='bg-primary_3 rounded-full px-3  py-3 font-semibold text-sm '>Create Wallet</button>
 
                 <button type='button' className='bg-secondary_2 rounded-full px-3  py-3 font-semibold text-sm '>Start Wallet Recovery</button>
                 <button type='button' onClick={logout} className='bg-secondary_4 rounded-full px-3  py-3 font-semibold text-sm '>Logout</button>

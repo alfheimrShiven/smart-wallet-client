@@ -8,17 +8,17 @@ import AccountRecovery from '@pages/Account-recovery'
 import NoPage from '@pages/NoPage'
 import { PrivyProvider } from '@privy-io/react-auth'
 import { base, baseGoerli, mainnet, goerli, polygon, polygonMumbai } from 'viem/chains';
-//import { PrivyWagmiConnector } from '@privy-io/wagmi-connector';
+import { PrivyWagmiConnector } from '@privy-io/wagmi-connector';
 // You can import additional chains from 'wagmi/chains'
-// // https://wagmi.sh/react/chains
-// import { configureChains } from 'wagmi';
-// // You may replace this with your preferred providers
-// // https://wagmi.sh/react/providers/configuring-chains#multiple-providers
-// import { publicProvider } from 'wagmi/providers/public';
+// https://wagmi.sh/react/chains
+import { configureChains } from 'wagmi';
+// You may replace this with your preferred providers
+// https://wagmi.sh/react/providers/configuring-chains#multiple-providers
+import { publicProvider } from 'wagmi/providers/public';
 
-// // Replace the chains and providers with the ones used by your app.
-// // https://wagmi.sh/react/providers/configuring-chains
-// const configureChainsConfig = configureChains([mainnet, goerli], [publicProvider()]);
+// Replace the chains and providers with the ones used by your app.
+// https://wagmi.sh/react/providers/configuring-chains
+const configureChainsConfig = configureChains([mainnet, goerli, polygon, polygonMumbai], [publicProvider()]);
 
 function App() {
 
@@ -46,7 +46,7 @@ function App() {
         supportedChains: [base, baseGoerli, mainnet, goerli, polygon, polygonMumbai]
       }}
     >
-
+      {/* <PrivyWagmiConnector wagmiChainsConfig={configureChainsConfig}> */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
@@ -60,6 +60,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      {/* </PrivyWagmiConnector> */}
 
     </PrivyProvider>
   )

@@ -29,6 +29,9 @@ dependencies:
   wagmi:
     specifier: '>=1.4.12 <2'
     version: 1.4.13(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)(viem@2.4.0)
+  zustand:
+    specifier: ^4.5.0
+    version: 4.5.0(@types/react@18.2.48)(react@18.2.0)
 
 devDependencies:
   '@types/react':
